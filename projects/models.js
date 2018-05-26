@@ -37,8 +37,7 @@ const ProjectSchema = mongoose.Schema({
     }
   ],
   pendingRequest: [
-        type: String,
-        require: true
+        String
   ]
 });
 
