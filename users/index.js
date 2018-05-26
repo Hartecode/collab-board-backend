@@ -1,6 +1,6 @@
 'use strick';
 
 const { Users } = require('./models');
-const { Router } = require('./router');
+const { router } = require('./router');
 
-module.exports = { Users, Router };
+module.exports = { Users, router };

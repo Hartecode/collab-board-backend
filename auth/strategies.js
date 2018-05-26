@@ -3,7 +3,7 @@ const passport = require('passport');
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 const GitHubStrategy = require('passport-github2').Strategy;
-const { User } = require('../users/models');
+const { Users } = require('../users/models');
 
 
 
@@ -28,7 +28,7 @@ passport.use(new GitHubStrategy({
     };
 
     // update the user if s/he exists or add a new user
-    User.findOneAndUpdate(searchQuery, updates, options, function(err, user) {
+    Users.findOneAndUpdate(searchQuery, updates, options, function(err, user) {
       if(err) {
         return done(err);
       } else {
@@ -45,7 +45,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  User.findById(id, function (err, user) {
+  Users.findById(id, function (err, user) {
     done(err, user);
   });
 });

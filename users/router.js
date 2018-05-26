@@ -1,10 +1,11 @@
 'use strict';
 const express = require('express');
-const bodyParser = require('body-parser');
-const passport = require('passport');
+const router = express.Router();
+
 const passportGithub = require('../auth/strategies');
 
-const router = express.Router();
+
+
 
 
 //GET /auth/github
