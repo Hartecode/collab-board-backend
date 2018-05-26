@@ -19,4 +19,4 @@ router.get('/auth/github/callback',
     res.json(req.user);
   });
 
-module.exports = router;
+module.exports = { router };

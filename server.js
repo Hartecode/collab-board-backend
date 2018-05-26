@@ -15,6 +15,7 @@ const { PORT, DATABASE_URL } = require('./config')
 // *** routes *** 
 const { router: usersRouter } = require('./users');
 const { router: projectsRouter } = require('./projects');
+const { router: requestRouter } = require('./projects');
 
 // *** express instance *** 
 const app = express();
@@ -39,10 +40,11 @@ app.use(passport.session());
 
 
 // *** routers ***
-//needs to be change
 
 // app.use('/api', usersRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/projects', projectsRouter);
+app.use('/api/requests', requestRouter);
 
 
 //test to see if server is running
