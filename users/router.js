@@ -5,9 +5,6 @@ const router = express.Router();
 const passportGithub = require('../auth/strategies');
 
 
-
-
-
 //GET /auth/github
 //   Use passport.authenticate() as route middleware to authenticate the
 //   request.  The first step in GitHub authentication will involve redirecting
