@@ -1,80 +1,85 @@
-console.log('test');
+// *** main dependencies *** //
 const express = require('express');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 const passport = require('passport');
-const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
-const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-
+const bodyParser = require('body-parser');
 const GitHubStrategy = require('passport-github2').Strategy;
 
-const {User} = require('./users/models');
+//bring over Port & DATABASE_URL from config.js
+const { PORT, DATABASE_URL } = require('./config')
 
+// *** routes *** 
+const { router: usersRouter } = require('./users');
+
+// *** express instance *** 
 const app = express();
 
-// Logging
+//*** middleware ***
 app.use(morgan('common'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 
-passport.use(new GitHubStrategy({
-    clientID: GITHUB_CLIENT_ID,
-    clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: "http://127.0.0.1:3000/auth/github/callback"
-  },
-  function(accessToken, refreshToken, profile, done) {
-    User.findOrCreate({ githubId: profile.id }, function (err, user) {
-      return done(err, user);
-    });
-  }
-));
 
-// GET /auth/github
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  The first step in GitHub authentication will involve redirecting
-//   the user to github.com.  After authorization, GitHub will redirect the user
-//   back to this application at /auth/github/callback
-app.get('/auth/github',
-  passport.authenticate('github', { scope: [ 'user:email' ] }),
-  function(req, res, next){
-    // The request will be redirected to GitHub for authentication, so this
-    // function will not be called.
-  });
+// *** routers ***
+//needs to be change
+app.use('/', usersRouter);
+// app.use('/api/users', usersRouter);
 
-// GET /auth/github/callback
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  If authentication fails, the user will be redirected back to the
-//   login page.  Otherwise, the primary route function will be called,
-//   which, in this example, will redirect the user to the home page.
-app.get('/auth/github/callback', 
-  passport.authenticate('github', { failureRedirect: '/login' }),
-  function(req, res, next) {
-    res.redirect('/');
-    console.log(req)
-  });
 
-app.get('/logout', function(req, res){
-  req.logout();
-  res.redirect('/');
-});
-
-// app.get("/auth/github", function(req, res){
-//   console.log("started oauth");
-//   return githubOAuth.login(req, res);
-// });
-
-// app.get("/auth/github/callback", function(req, res){
-//   console.log("received callback");
-//   return githubOAuth.callback(req, res);
-// });
-
-// githubOAuth.on('error', function(err) {
-//   console.error('there was a login error', err)
-// })
-
-// githubOAuth.on('token', function(token, serverResponse) {
-//   serverResponse.end(JSON.stringify(token))
-// })
-
+//test to see if server is running
 app.get('/', (req, res) => {
 	res.send("testing");
 });
 
-app.listen(8000, () => console.log('server running port 8000'));
+//if not the any useable end point then display a message
+app.use('*', function (req, res) {
+  res.status(404).json({ message: 'Page Not Found' });
+});
+
+
+//the variable server is blank but will be assigned under runServer and will be used again in closerserver
+let server;
+
+// *** run server ***
+function runServer(databaseUrl = DATABASE_URL, port = PORT) {
+  return new Promise((resolve, reject) => {
+    mongoose.connect(databaseUrl, err => {
+      if (err) {
+        return reject(err);
+      }
+      server = app.listen(port, () => {
+        console.log(`Your app is listening on port ${port}`);
+        resolve();
+      })
+        .on('error', err => {
+          mongoose.disconnect();
+          reject(err);
+        });
+    });
+  });
+}
+
+// *** close server ***
+function closeServer() {
+  return mongoose.disconnect().then(() => {
+    return new Promise((resolve, reject) => {
+      console.log('Closing server');
+      server.close(err => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    });
+  });
+}
+
+if (require.main === module) {
+  runServer().catch(err => console.error(err));
+}
+
+
+module.exports = { app, runServer, closeServer };
