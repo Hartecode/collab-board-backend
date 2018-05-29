@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const bodyParser = require('body-parser');
+const cookieSession = require('cookie-session');
 
 mongoose.Promise = global.Promise;
 
@@ -30,6 +31,15 @@ app.use(function (req, res, next) {
   }
   next();
 });
+
+///set up cookie 
+app.use(cookieSession({
+  name: 'session',
+  keys: ['secretKeyIsAStringAndShouldBeHidden'],
+ 
+  // Cookie Options
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
 
 //*** middleware ***
 app.use(morgan('common'));
