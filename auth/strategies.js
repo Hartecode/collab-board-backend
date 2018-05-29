@@ -7,20 +7,24 @@ const { Users } = require('../users/models');
 
 
 
-passport.use(new GitHubStrategy({
+passport.use(
+  new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: "http://127.0.0.1:3000/auth/github/callback"
-  },
-  function(accessToken, refreshToken, profile, done) {
-
+    callbackURL: "/api/users/auth/github/callback"
+  }, (accessToken, refreshToken, profile, done) => {
+    console.log("*******passport callback function fired******")
     let searchQuery = {
-      name: profile.displayName
+      oauthId: profile.id
     };
 
     let updates = {
-      name: profile.displayName,
-      someID: profile.id
+      username: profile.username,
+      email: profile.emails[0].value,
+      oauthId: profile.id,
+      avatarUrl: profile['_json'].avatar_url,
+      githubProfileUrl: profile.profileUrl,
+      githubRepos: profile['_json'].repos_url
     };
 
     let options = {
@@ -28,10 +32,11 @@ passport.use(new GitHubStrategy({
     };
 
     // update the user if s/he exists or add a new user
-    Users.findOneAndUpdate(searchQuery, updates, options, function(err, user) {
+    Users.findOneAndUpdate(searchQuery, updates, options, (err, user) => {
       if(err) {
         return done(err);
       } else {
+        console.log(`User ${profile.username} added`)
         return done(null, user);
       }
     });
@@ -40,12 +45,12 @@ passport.use(new GitHubStrategy({
 ));
 
 // serialize user into the session
-passport.serializeUser(function(user, done) {
+passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
-  Users.findById(id, function (err, user) {
+passport.deserializeUser((id, done) => {
+  Users.findById(id, (err, user) => {
     done(err, user);
   });
 });

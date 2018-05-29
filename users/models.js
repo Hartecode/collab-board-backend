@@ -20,11 +20,13 @@ const UserSchema = mongoose.Schema({
     required: true,
     select: false
   },
-  oauthProvider: {
+  githubProfileUrl: {
     type: String,
-    required: true,
-    enum: ['github'],
-    select: false
+    required: true
+  },
+  githubRepos: {
+    type: String,
+    required: true
   }
 });
 
@@ -35,10 +37,11 @@ UserSchema.methods.serialize = function() {
     email: this.email || '',
     avatarUrl: this.avatarUrl || '',
     oauthId: this.oauthId || '',
-    oauthProvider: this.oauthProvider 
+    githubProfileUrl: this.githubProfileUrl || '',
+    githubRepos: this.githubRepos || ''
   };
 };
 
-const Users = mongoose.model('User', UserSchema);
+const Users = mongoose.model('Users', UserSchema);
 
 module.exports = { Users };
