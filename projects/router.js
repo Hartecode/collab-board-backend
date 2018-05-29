@@ -7,7 +7,7 @@ const { Projects } = require('./models');
 //*** get All projects ***
 router.get('/', (req, res, next) => {
 	Projects.find()
-		.then(projects => res.json(project => project.serialize()))
+		.then(projects => res.json(projects.map(project => project.serialize())))
 		.catch(next);
 });
 
@@ -23,7 +23,7 @@ router.get('/:id', (req, res, next) => {
 router.get('/own/:id', (req, res, next) => {
 	const id = req.params.id;
 	Projects.find( { ownerID: id })
-		.then( projects => res.json(project => project.serialize()))
+		.then( projects => res.json(projects.map(project => project.serialize() )))
 		.catah(next);
 });
 

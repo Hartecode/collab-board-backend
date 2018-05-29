@@ -33,6 +33,7 @@ app.use(function (req, res, next) {
 
 //*** middleware ***
 app.use(morgan('common'));
+app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
