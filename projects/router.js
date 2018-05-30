@@ -4,6 +4,11 @@ const router = express.Router();
 
 const { Projects } = require('./models');
 
+//*** authorization middleware ****
+const authCheck = (req, res, next) => {
+  (!req.user)?  res.redirect('http://localhost:3000/login'): next();
+}
+
 //*** get All projects ***
 router.get('/', (req, res, next) => {
 	Projects.find()

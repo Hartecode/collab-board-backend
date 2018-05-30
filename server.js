@@ -15,6 +15,7 @@ const { PORT, DATABASE_URL } = require('./config')
 
 // *** routes *** 
 const { router: usersRouter } = require('./users');
+const { router: authRouter } = require('./auth');
 const { router: projectsRouter } = require('./projects');
 const { router: requestRouter } = require('./projects');
 
@@ -26,15 +27,13 @@ app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
-  if (req.method === 'OPTIONS') {
-    return res.send(204);
-  }
-  next();
+  
+  (req.method === 'OPTIONS') ? res.send(204) : next();
 });
 
 ///set up cookie 
 app.use(cookieSession({
-  name: 'session',
+  name: 'collab_b_session',
   keys: ['secretKeyIsAStringAndShouldBeHidden'],
  
   // Cookie Options
@@ -53,6 +52,7 @@ app.use(passport.session());
 // *** routers ***
 
 // app.use('/api', usersRouter);
+app.use('/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/projects', projectsRouter);
 app.use('/api/requests', requestRouter);
@@ -60,11 +60,11 @@ app.use('/api/requests', requestRouter);
 
 //test to see if server is running
 app.get('/', (req, res) => {
-	res.send("testing");
+	res.send("*** Collab Board server is running! ****");
 });
 
 //if not the any useable end point then display a message
-app.use('*', function (req, res) {
+app.use('*', (req, res) => {
   res.status(404).json({ message: 'Page Not Found' });
 });
 
