@@ -18,7 +18,7 @@ router.get('/allusers', (req, res, next) => {
 });
 
 // *** get current user ***
-router.get('/loginuser', authCheck, (req, res, next) => {
+router.get('/loginuser', (req, res, next) => {
 	res.json(req.user);
 });
 
