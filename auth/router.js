@@ -6,7 +6,7 @@ const { Users } = require('../users/models');
 const passportGithub = require('./strategies');
 
 //**** github initial login link 
-router.get('/github', passportGithub.authenticate('github', { scope: [ 'user:email', 'read:user', 'repo:invite' ] }));
+router.get('/github', passportGithub.authenticate('github', { scope: [ 'user:email', 'read:user', 'repo:invite' ], session: true }));
 
 
 ///**** github callback router *****
@@ -15,7 +15,7 @@ router.get('/github/callback',
   function(req, res) {
     // Successful authentication
     console.log(`${req.user.username} login to the app`);
-    res.redirect('http://localhost:3000/dashboard');
+    res.redirect(`http://localhost:3000/dashboard/${req.user._id}`);
   }
 );
 

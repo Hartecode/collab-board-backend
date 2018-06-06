@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
+const session = require('express-session');
 
 mongoose.Promise = global.Promise;
 
@@ -46,6 +47,7 @@ app.use(morgan('common'));
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: true, cookie: { secure: true } }))
 app.use(passport.initialize());
 app.use(passport.session());
 

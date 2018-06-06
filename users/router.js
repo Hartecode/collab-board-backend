@@ -18,8 +18,12 @@ router.get('/allusers', (req, res, next) => {
 });
 
 // *** get current user ***
-router.get('/loginuser', (req, res, next) => {
-	res.json(req.user);
+router.get('/loginuser/:id', (req, res, next) => {
+	console.log(req.params.id);
+	const ID = req.params.id;
+	Users.findById(ID)
+		.then(user => res.json(user.serialize()))
+		.catch(next);
 });
 
 
