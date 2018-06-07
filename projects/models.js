@@ -3,6 +3,24 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
+const CollaboratorSchema = mongoose.Schema({
+  userID: {
+    type: String,
+    require: true
+  },
+  avatarUrl: {
+    type: String,
+    require: true
+  }
+})
+
+const PendingSchema = mongoose.Schema({
+  userID: {
+    type: String,
+    require: true
+  }
+});
+
 const ProjectSchema = mongoose.Schema({
   projectname: {
     type: String,
@@ -24,21 +42,8 @@ const ProjectSchema = mongoose.Schema({
     type: String,
     require: true
   },
-  collaborators: [
-    {
-      userID: {
-        type: String,
-        require: true
-      },
-      avatarUrl: {
-        type: String,
-        require: true
-      }
-    }
-  ],
-  pendingRequest: [
-        String
-  ]
+  collaborators: [CollaboratorSchema],
+  pendingRequest: [PendingSchema]
 });
 
 ProjectSchema.methods.serialize = function() {
