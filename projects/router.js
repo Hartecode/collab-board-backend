@@ -91,6 +91,81 @@ router.put('/:id', (req, res, next) => {
 		.catch(next);
 });
 
+// *** add pending request ***
+router.put('/request/:id', (req, res, next) => {
+	const id = req.parmas.id;
+	const requester = req.body;
+
+	const updateableField = ['userID'];
+
+	let missingItems = requiredFeilds.map( field => {
+			return !(field in postProject);
+		}
+	);
+
+	if (missingItems.length > 0) {
+		const err = new Error(`Missing "${missingItems}" in request body`);
+		err.status = 400;
+		return next(err);
+	}
+
+	Projects.findByIdAndUpdate(id, 
+		{$push: { pendingRequest: requester }}, 
+		{ new: true })
+		.then( item => { (item) ? res.json(item.serialize()) : next() })
+		.catch(next);
+});
+
+// *** add collab ***
+router.put('/collab/:id', (req, res, next) => {
+	const id = req.parmas.id;
+	const collaborator = req.body;
+
+	const updateableField = ['userID', 'avatarUrl'];
+
+	let missingItems = requiredFeilds.map( field => {
+			return !(field in postProject);
+		}
+	);
+
+	if (missingItems.length > 0) {
+		const err = new Error(`Missing "${missingItems}" in request body`);
+		err.status = 400;
+		return next(err);
+	}
+
+	Projects.findByIdAndUpdate(id, 
+		{$push: { collaborators: collaborator }}, 
+		{ new: true })
+		.then( item => { (item) ? res.json(item.serialize()) : next() })
+		.catch(next);
+});
+
+// *** delete preding request ***
+router.put('/removerequest/:id', (req, res, next) => {
+	const id = req.parmas.id;
+	const requester = req.body;
+
+	const updateableField = ['userID'];
+
+	let missingItems = requiredFeilds.map( field => {
+			return !(field in postProject);
+		}
+	);
+
+	if (missingItems.length > 0) {
+		const err = new Error(`Missing "${missingItems}" in request body`);
+		err.status = 400;
+		return next(err);
+	}
+
+	Projects.findByIdAndUpdate(id, 
+		{$pull: { pendingRequest: {userID: requester} }}, 
+		{ new: true })
+		.then( item => { (item) ? res.json(item.serialize()) : next() })
+		.catch(next);
+});
+
 //*** delete a project ***
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
@@ -99,5 +174,6 @@ router.delete('/:id', (req, res, next) => {
     .then( item => { (item) ? res.status(204).end() : next() })
     .catch(next);
 });
+
 
 module.exports = { router };
