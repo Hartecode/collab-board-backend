@@ -10,10 +10,10 @@ const authCheck = (req, res, next) => {
 }
 
 //*** get owned projects by userId ***
-router.get('/:id', (req, res, next) => {
-	const id = req.params.id;
+router.get('/:userId', (req, res, next) => {
+	const userId = req.params.userId;
 
-	Requests.find( { ownerID: id })
+	Requests.find( { ownerID: userId })
 		.then( notifications => res.json(notifications.map( request => request.serialize()))
 		.catah(next);
 });

@@ -17,12 +17,13 @@ router.get('/', (req, res, next) => {
 });
 
 //*** get project by the project's id ***
-router.get('/:id', (req, res, next) => {
-	const id = req.params.id;
-	Projects.findById(id)
-		.then( project => (project)? res.json(project.serialize()) : next())
-		.catah(next);
-});
+// router.get('/:projectId', (req, res, next) => {
+// 	const projectId = req.params.projectId;
+	
+// 	// Projects.findById(projectId)
+// 	// 	.then( project => res.json(project.serialize()))
+// 	// 	.catah(next);
+// });
 
 //*** get owned projects by userId ***
 router.get('/own/:id', (req, res, next) => {
@@ -92,7 +93,7 @@ router.put('/:id', (req, res, next) => {
 });
 
 // *** add pending request ***
-router.put('/request/:id', (req, res, next) => {
+router.post('/request/:id', (req, res, next) => {
 	const id = req.parmas.id;
 	const requester = req.body;
 
@@ -109,16 +110,21 @@ router.put('/request/:id', (req, res, next) => {
 		return next(err);
 	}
 
-	Projects.findByIdAndUpdate(id, 
-		{$push: { pendingRequest: requester }}, 
-		{ new: true })
-		.then( item => { (item) ? res.json(item.serialize()) : next() })
+	Projects.findById(id)
+		.then( project => {
+			project.pendingRequest.push(requester);
+
+			project.save( err => {
+				(err) ? res.send(err): res.json(requester)
+			});
+		})
 		.catch(next);
+	
 });
 
 // *** add collab ***
-router.put('/collab/:id', (req, res, next) => {
-	const id = req.parmas.id;
+router.post('/collab/:projectId', (req, res, next) => {
+	const projectId = req.parmas.projectId;
 	const collaborator = req.body;
 
 	const updateableField = ['userID', 'avatarUrl'];
@@ -134,35 +140,30 @@ router.put('/collab/:id', (req, res, next) => {
 		return next(err);
 	}
 
-	Projects.findByIdAndUpdate(id, 
-		{$push: { collaborators: collaborator }}, 
-		{ new: true })
-		.then( item => { (item) ? res.json(item.serialize()) : next() })
+	Projects.findById(projectId)
+		.then( project => {
+			project.collaborators.push(collaborator);
+
+			project.save( err => {
+				(err) ? res.send(err): res.json(requester)
+			});
+		})
 		.catch(next);
 });
 
 // *** delete preding request ***
-router.put('/removerequest/:id', (req, res, next) => {
-	const id = req.parmas.id;
-	const requester = req.body;
+router.delete('/removerequest/:projectId/:requestId', (req, res, next) => {
+	const projectId = req.parmas.projectId;
+	const requestId = req.parmas.requestId;
 
-	const updateableField = ['userID'];
+	Projects.findById(projectId)
+		.then( project => {
+			project.pendingRequest.id(requesterID).remove();
 
-	let missingItems = requiredFeilds.map( field => {
-			return !(field in postProject);
-		}
-	);
-
-	if (missingItems.length > 0) {
-		const err = new Error(`Missing "${missingItems}" in request body`);
-		err.status = 400;
-		return next(err);
-	}
-
-	Projects.findByIdAndUpdate(id, 
-		{$pull: { pendingRequest: {userID: requester} }}, 
-		{ new: true })
-		.then( item => { (item) ? res.json(item.serialize()) : next() })
+			project.save( err => {
+				(err) ? res.send(err): res.json(project)
+			});
+		})
 		.catch(next);
 });
 
