@@ -17,20 +17,21 @@ router.get('/', (req, res, next) => {
 });
 
 //*** get project by the project's id ***
-// router.get('/:projectId', (req, res, next) => {
-// 	const projectId = req.params.projectId;
-	
-// 	// Projects.findById(projectId)
-// 	// 	.then( project => res.json(project.serialize()))
-// 	// 	.catah(next);
-// });
+router.get('/:projectId', (req, res, next) => {
+	const projectId = req.params.projectId;
 
+	Projects.findById(projectId)
+		.then( project => (project)? res.json(project.serialize()) : next())
+		.catch(next);
+});
+
+	
 //*** get owned projects by userId ***
-router.get('/own/:id', (req, res, next) => {
-	const id = req.params.id;
-	Projects.find( { ownerID: id })
+router.get('/own/:userId', (req, res, next) => {
+	const userId = req.params.userId;
+	Projects.find( { ownerID: userId})
 		.then( projects => res.json(projects.map(project => project.serialize() )))
-		.catah(next);
+		.catch(next);
 });
 
 //*** get collab projects by userId ***
@@ -48,9 +49,9 @@ router.get('/collab/:id', (req, res, next) => {
 //*** add a new project ***
 router.post('/', (req, res, next) => {
 	const postProject = req.body;
-	const requiredFields = [ 'projectname', 'projectDec', 'projectLink', 'ownerID', 'ownerAvatarUrl'];
+	const requiredFeilds = [ 'projectname', 'projectDec', 'projectLink', 'ownerID', 'ownerAvatarUrl'];
 
-	let missingItems = requiredFeilds.map( field => {
+	let missingItems = requiredFeilds.filter( field => {
 			return !(field in postProject);
 		}
 	);
