@@ -18,7 +18,7 @@ const { PORT, DATABASE_URL } = require('./config')
 const { router: usersRouter } = require('./users');
 const { router: authRouter } = require('./auth');
 const { router: projectsRouter } = require('./projects');
-const { router: requestRouter } = require('./projects');
+const { router: requestRouter } = require('./requests');
 
 // *** express instance *** 
 const app = express();
