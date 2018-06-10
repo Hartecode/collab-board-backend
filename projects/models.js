@@ -52,7 +52,7 @@ ProjectSchema.methods.serialize = function() {
     projectname: this.projectname || '',
     projectDec: this.projectDec || '',
     projectLink: this.projectLink || '',
-    ownerID: this.ownerId || '',
+    ownerID: this.ownerID || '',
     ownerAvatarUrl: this.ownerAvatarUrl || '',
     collaborators: this.collaborators,
     pendingRequest: this.pendingRequest
