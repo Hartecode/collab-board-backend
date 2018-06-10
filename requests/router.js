@@ -14,8 +14,33 @@ router.get('/:userId', (req, res, next) => {
 	const userId = req.params.userId;
 
 	Requests.find( { ownerID: userId })
-		.then( notifications => res.json(notifications.map( request => request.serialize()))
-		.catah(next);
+		.then( notifications => res.json(notifications.map( request => request.serialize() )))
+		.catch(next);
+});
+
+//*** post a new request ****
+router.post('/', (req, res, next) => {
+	const postRequest = req.body;
+	const requiredFeilds = [ 'projectname', 'projectID', 'ownerID', 'requesterID', 'requesterUsername', 'requesterAvatarUrl', 'requestDec'];
+
+	let missingItems = requiredFeilds.filter( field => {
+			return !(field in postRequest);
+		}
+	);
+
+	if (missingItems.length > 0) {
+		const err = new Error(`Missing "${missingItems}" in request body`);
+		err.status = 400;
+		return next(err);
+	}
+
+	Requests.create( postRequest )
+		.then( newRequest => {
+      		res.status(201)
+        		.location(`${req.originalUrl}/${newRequest.id}`)
+        		.json(newRequest.serialize());
+  		})
+    	.catch(next);
 });
 
 //*** delete a project ***
