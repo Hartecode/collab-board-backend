@@ -35,11 +35,11 @@ router.get('/own/:userId', (req, res, next) => {
 });
 
 //*** get collab projects by userId ***
-router.get('/collab/:id', (req, res, next) => {
-	const id = req.params.id;
+router.get('/collab/:userId', (req, res, next) => {
+	const userId = req.params.userId;
 	Projects.find( { collaborators: [
 			{
-				userID: id
+				userID: userId
 			}
 		] })
 		.then( projects => res.json( project => project.serialize()))
@@ -77,7 +77,7 @@ router.put('/:id', (req, res, next) => {
 	const updates = req.body;
 	const updateableField = ['projectname', 'projectDec'];
 
-	let missingItems = requiredFeilds.map( field => {
+	let missingItems = requiredFeilds.filter( field => {
 			return !(field in postProject);
 		}
 	);
@@ -94,14 +94,14 @@ router.put('/:id', (req, res, next) => {
 });
 
 // *** add pending request ***
-router.post('/request/:id', (req, res, next) => {
-	const id = req.parmas.id;
+router.post('/pending/:projectId', (req, res, next) => {
+	const projectId = req.params.projectId;
 	const requester = req.body;
 
-	const updateableField = ['userID'];
+	const requiredFeilds = ['userID'];
 
-	let missingItems = requiredFeilds.map( field => {
-			return !(field in postProject);
+	let missingItems = requiredFeilds.filter( field => {
+			return !(field in requester);
 		}
 	);
 
@@ -111,7 +111,7 @@ router.post('/request/:id', (req, res, next) => {
 		return next(err);
 	}
 
-	Projects.findById(id)
+	Projects.findById(projectId)
 		.then( project => {
 			project.pendingRequest.push(requester);
 
@@ -125,13 +125,13 @@ router.post('/request/:id', (req, res, next) => {
 
 // *** add collab ***
 router.post('/collab/:projectId', (req, res, next) => {
-	const projectId = req.parmas.projectId;
+	const projectId = req.params.projectId;
 	const collaborator = req.body;
 
-	const updateableField = ['userID', 'avatarUrl'];
+	const requiredFeilds = ['userID', 'avatarUrl'];
 
-	let missingItems = requiredFeilds.map( field => {
-			return !(field in postProject);
+	let missingItems = requiredFeilds.filter( field => {
+			return !(field in collaborator);
 		}
 	);
 
@@ -146,8 +146,8 @@ router.post('/collab/:projectId', (req, res, next) => {
 			project.collaborators.push(collaborator);
 
 			project.save( err => {
-				(err) ? res.send(err): res.json(requester)
-			});
+				(err) ? res.send(err): res.json(collaborator);
+			})
 		})
 		.catch(next);
 });
