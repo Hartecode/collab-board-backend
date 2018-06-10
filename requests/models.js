@@ -20,6 +20,10 @@ const RequestSchema = mongoose.Schema({
     type: String,
     require: true
   },
+  requesterUsername: {
+    type: String,
+    require: true
+  },
   requesterAvatarUrl: {
     type: String,
     require: true
@@ -41,6 +45,7 @@ RequestSchema.methods.serialize = function() {
     projectID: this.projectID || '',
     ownerID: this.ownerID || '',
     requesterID: this.requesterID || '',
+    requesterUsername: this.requesterUsername || '',
     requesterAvatarUrl: this.requesterAvatarUrl || '',
     requestDec: this.requestDec || '',
     status: this.status
