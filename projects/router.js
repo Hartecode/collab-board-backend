@@ -37,13 +37,9 @@ router.get('/own/:userId', (req, res, next) => {
 //*** get collab projects by userId ***
 router.get('/collab/:userId', (req, res, next) => {
 	const userId = req.params.userId;
-	Projects.find( { collaborators: [
-			{
-				userID: userId
-			}
-		] })
-		.then( projects => res.json( project => project.serialize()))
-		.catah(next);
+	Projects.find(  { "collaborators.userID": userId })
+		.then( projects => res.json( projects.map(project => project.serialize() )))
+		.catch(next);
 });
 
 //*** add a new project ***
