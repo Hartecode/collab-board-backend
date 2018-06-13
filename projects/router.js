@@ -45,7 +45,7 @@ router.get('/collab/:userId', (req, res, next) => {
 //*** add a new project ***
 router.post('/', (req, res, next) => {
 	const postProject = req.body;
-	const requiredFeilds = [ 'projectname', 'projectDec', 'projectLink', 'ownerID', 'ownerAvatarUrl'];
+	const requiredFeilds = [ 'projectname', 'projectDec', 'projectLink', 'projectSeeking', 'ownerID', 'ownerAvatarUrl'];
 
 	let missingItems = requiredFeilds.filter( field => {
 			return !(field in postProject);

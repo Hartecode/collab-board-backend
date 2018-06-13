@@ -34,6 +34,10 @@ const ProjectSchema = mongoose.Schema({
     type: String,
     require: true
   },
+  projectSeeking: {
+    type: String,
+    require: true
+  },
   ownerID: {
     type: String,
     require: true
@@ -52,6 +56,7 @@ ProjectSchema.methods.serialize = function() {
     projectname: this.projectname || '',
     projectDec: this.projectDec || '',
     projectLink: this.projectLink || '',
+    projectSeeking: this.projectSeeking || '',
     ownerID: this.ownerID || '',
     ownerAvatarUrl: this.ownerAvatarUrl || '',
     collaborators: this.collaborators,
