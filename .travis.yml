@@ -1,4 +1,11 @@
 language: node_js
 node_js: node
 services:
-- mongodb
+- mongodb 
+deploy:
+  provider: heroku
+  api_key:
+    secure: n2S3CdMUN96IWnnXPrQliseg2XyL3zoqNeQA/rslfwiR2VPntVon4lAuW3dIDu6Mk8IuyBNFQtrQuqv5DtylTk8HCYATFcF7FHov9eCRSY7/jALUtkp0vFT4cUAh3GWM2JLdg6p+0QLu7Tx4cAnhiE24D9i8HG5tL51G/J1HQY8v6oIUolGtq0cphVLydaID5sJY3R6oA73KAgOfm8srsdbCjwxjMpJe/gvWnnvQOkur2OSKud5ej8OUe+5hYs/Glsg1UguNT+vy3vg8nDKND63/1bLyIZr/0dRVYCY0V6ATbMZtIgSI/fl4a/hg6ZvONBqCk9xr2jkuQb4oxRLJh6cNuAA1QCaXHC+FVQg5WwXIVUPXIAKTYLW4nZb0LUtBPaKeOTwKYq4WNdLw2b2vS9C8Z4zGaLbgj8Cn6x4GGbh/17BNO4TwLyutc5iOg9WfU4rrzGRyY4rCl4IrsdjTUGcix9QkCclnJnqzW8pf2HpdcZG1IAZy1exBBINyo0UNR/DpOlSm93MMvmFY75uh7udvHU8dWLnZgckieiZks6S205fx82Bsup1ok0OMIso12gf+Nu3Oblh1k1zOXZLdPYxvfHmcM4i5zIFWv6RyB/FFA+TJ0FvMHlcjGOOAcawL76/2Fx60xvXAM+9nl8CtxhWiIof1R8KSbePyHFYcoBw=
+  app: boiling-earth-62792
+  on:
+    repo: Hartecode/collab-board-backend
