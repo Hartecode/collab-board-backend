@@ -1,7 +1,6 @@
 // *** main dependencies *** //
 const passport = require('passport');
-const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
-const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
+const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = require('../config');;
 const GitHubStrategy = require('passport-github2').Strategy;
 const { Users } = require('../users/models');
 
