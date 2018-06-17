@@ -10,7 +10,7 @@ passport.use(
   new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: "/github/callback"
+    callbackURL: "/auth/github/callback"
   }, (accessToken, refreshToken, profile, done) => {
     console.log("*******passport callback function fired******")
     let searchQuery = {
