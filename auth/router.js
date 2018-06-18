@@ -11,7 +11,7 @@ router.get('/github', passportGithub.authenticate('github', { scope: [ 'user:ema
 
 ///**** github callback router *****
 router.get('/github/callback',
-  passportGithub.authenticate('github', { failureRedirect: '/login' }),
+  passportGithub.authenticate('github'),
   function(req, res) {
     // Successful authentication
     console.log(`${req.user.username} login to the app`);
