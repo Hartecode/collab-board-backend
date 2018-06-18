@@ -10,7 +10,7 @@ passport.use(
   new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: "/auth/github/callback"
+    callbackURL: "https://boiling-earth-62792.herokuapp.com/auth/github/callback"
   }, (accessToken, refreshToken, profile, done) => {
     console.log("*******passport callback function fired******")
     let searchQuery = {
