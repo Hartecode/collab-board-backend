@@ -1,5 +1,6 @@
 <h1>Collab Board<h1>
 <h2>This is the server side code.</h2>
+Check out the <a href="https://github.com/Hartecode/collab-board">front-end repo</a>
 <hr>
 Collab Board is where a user can post a project they are seeking collaboration on and also search for a project where they can be a co-collaborator. The user can deny or approve any requests they receive. The user can also view their owned and collab projects.
 <hr>
