@@ -6,7 +6,7 @@ const { Users } = require('./models');
 
 //*** authorization middleware ****
 const authCheck = (req, res, next) => {
-  (!req.user)?  res.redirect('http://localhost:3000/login'): next();
+  (!req.user)?  res.redirect('http://www.collaboard.co/login'): next();
 }
 
 

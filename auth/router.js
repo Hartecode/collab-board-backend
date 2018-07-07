@@ -15,7 +15,7 @@ router.get('/github/callback',
   function(req, res) {
     // Successful authentication
     console.log(`${req.user.username} login to the app`);
-    res.redirect(`https://zealous-joliot-ccbd2b.netlify.com/dashboard/${req.user._id}`);
+    res.redirect(`http://www.collaboard.co/dashboard/${req.user._id}`);
   }
 );
 
@@ -23,7 +23,7 @@ router.get('/github/callback',
 ///*** logout end point ****
 router.get('/logout', (req, res) => {
     req.logout();
-    res.redirect('https://zealous-joliot-ccbd2b.netlify.com/login');
+    res.redirect('http://www.collaboard.co/login');
 });
 
 module.exports = { router };
